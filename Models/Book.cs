@@ -11,6 +11,9 @@ namespace ProjectEcomerceFinal.Models
         [Required]
         [MaxLength(40)]
         public string BookName { get; set; }
+        [Required]
+        [MaxLength(40)]
+        public string AuthorName { get; set; }
 
         public double? Price { get; set; }
         public string? Image { get; set; }
@@ -24,6 +27,8 @@ namespace ProjectEcomerceFinal.Models
         public List<CartDetail> CartDetails { get; set; }
 
 
+        [NotMapped]
+        public string GenreName { get; set; }
 
     }
 }
