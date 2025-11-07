@@ -2,18 +2,59 @@
 @{
     ViewData["Title"] = "GetUserCart";
 }
-
 <div style="width:90%;margin:auto">
-    <h3>My Cart</h3>
+    @if (Model != null && Model.CartDetails != null && Model.CartDetails.Count > 0)
+    {
 
-    <table class="table table-bordered">
-        <tr>
-            <th>Book</th>
-            <th>Image</th>
-            <th>Genre</th>
-            <th>Unit Price</th>
-            <th>Qty</th>
-            <th>Total Price</th>
-        </tr>
-    </table>
+        <h3>My Cart</h3>
+
+        <table class="table table-bordered">
+            <tr>
+                <th>Book</th>
+                <th>Image</th>
+                <th>Genre</th>
+                <th>Unit Price</th>
+                <th>Qty</th>
+                <th>Total Price</th>
+            </tr>
+
+            @foreach (var item in Model.CartDetails)
+            {
+                <tr>
+                    <td>@item.Book.BookName</td>
+                    <td>@if (string.IsNullOrEmpty(item.Book.Image))
+                        {
+                            <img src="/images/NoImage.png" style="width: 80px; height:100px" />
+                        }
+                        else
+                        {
+                            <img src="/images/@item.Book.Image" style="width: 80px; height:100px" />
+
+                        }
+                    </td>
+                    <td>
+                        @item.Book.genre.GenreName
+                    </td>
+                    <td>
+                        @item.Book.Price 
+                    </td>
+                    
+                    <td>
+                        @item.Quantity
+                    </td>
+                    <td>
+                      @(item.Book.Price*item.Quantity)
+                    </td>
+                    <td>
+                        <a class="btn btn-info" href="/Cart/AddItem?bookId=@item.BookId&&redirect=1">+</a>
+                        <a class="btn btn-danger" href="/Cart/RemoveItem?bookId=@item.BookId&&redirect=1">-</a>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <h5>Cart Is Empty</h5>
+    }
 </div>

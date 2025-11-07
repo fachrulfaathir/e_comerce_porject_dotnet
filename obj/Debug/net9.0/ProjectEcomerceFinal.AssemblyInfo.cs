@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ProjectEcomerceFinal")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ad9c21ce1e2741a98dd8c1e2a15a997b7563ed26")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ef0f61ed27f31e91d02df0005b268e2ffe21e57")]
 [assembly: System.Reflection.AssemblyProductAttribute("ProjectEcomerceFinal")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ProjectEcomerceFinal")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
