@@ -1,6 +1,5 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 
 namespace ProjectEcomerceFinal.Repositories
 {
@@ -11,7 +10,7 @@ namespace ProjectEcomerceFinal.Repositories
         {
             _db = db;
         }
-        public async Task<IEnumerable<Book>> DisplayBooks(string sTerm = "", int genreId = 0)
+        public async Task<IEnumerable<Book>> GetBooks(string sTerm = "", int genreId = 0)
         {
             sTerm = (sTerm ?? "").Trim().ToLower();
 
@@ -25,10 +24,9 @@ namespace ProjectEcomerceFinal.Repositories
                                          BookName = book.BookName,
                                          GenreId = book.GenreId,
                                          Price = book.Price,
-                                         GenreNames = genre.GenreName
+                                         GenreName = genre.GenreName
                                      };
 
-            // Filter pencarian (jika sTerm tidak kosong)
             if (!string.IsNullOrWhiteSpace(sTerm))
             {
                 query = query.Where(b => b.BookName.ToLower().StartsWith(sTerm) ||
@@ -44,5 +42,14 @@ namespace ProjectEcomerceFinal.Repositories
             // Eksekusi query ke database secara async
             return await query.ToListAsync();
         }
+
+      
+        public async Task<IEnumerable<Genre>> Genres()
+        {
+            IQueryable<Genre> query = from genre in _db.Genres
+                                      select genre;
+            return await query.ToListAsync();
+        }
+
     }
 }

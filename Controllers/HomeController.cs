@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using ProjectEcomerceFinal.Models;
 
 namespace ProjectEcomerceFinal.Controllers
 {
@@ -17,8 +16,17 @@ namespace ProjectEcomerceFinal.Controllers
 
         public async Task<IActionResult> Index(string sTerm = "", int genreId = 0)
         {
-            var books = await _homeRepository.DisplayBooks(sTerm, genreId);
-            return View(books);
+            IEnumerable<Book> books = await _homeRepository.GetBooks(sTerm, genreId);
+            IEnumerable<Genre> genre = await _homeRepository.Genres();
+
+            BookDisplayModel displayModelBook = new BookDisplayModel()
+            {
+                Books = books,
+                Genres = genre,
+                GenreId = genreId,
+                STerm = sTerm
+            };
+            return View(displayModelBook);
         }
 
         public IActionResult Privacy()
