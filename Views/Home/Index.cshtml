@@ -7,24 +7,23 @@
         <div class="col-12">
             <label class="visually-hidden" for="genreId">Genre</label>
             <select class="form-select" id="genreId" name="genreId">
-                <option >Pilih Genre</option>
-                @foreach(var genre in Model.Genres)
+                <option>Pilih Genre</option>
+                @foreach (var genre in Model.Genres)
                 {
                     <option selected="@(genre.Id == Model.GenreId)" value="@genre.Id">@genre.GenreName</option>
                 }
             </select>
         </div>
 
-      <div class="col-12">
+        <div class="col-12">
             <label class="visually-hidden" for="sTerm">Seach Here...</label>
             <div class="input-group col-12">
                 <input type="text" class="form-control" id="sTerm" name="sTerm" placeholder="Seach By Title">
                 <button type="submit" class="btn btn-primary">Seach</button>
                 <a href="/Home/Index" class="btn btn-dark">Reset</a>
+            </div>
         </div>
-      </div>
-   
-</form>
+    </form>
 </div>
 
 
@@ -44,7 +43,7 @@
             <div class="card-body">
                 <h5 class="card-title">@book.BookName</h5>
                 <p class="card-text">
-                    <b>Genre :</b>  @book.GenreName<br/>
+                    <b>Genre :</b>  @book.GenreName<br />
                     <b>Author :</b> @book.AuthorName<br />
                     <b>Price :</b> @book.Price
                 </p>
@@ -58,25 +57,25 @@
 @section Scripts {
     <script>
 
-       
-           async function add(bookId){
-             var usernameEl = document.getElementById("username");
-            if(usernameEl == null){
-                window.location.href="/Identity/Account/Login"
-            }
-                try{
-                    var response = await fetch(`/Cart/AddItem?bookId=${bookId}`);
-                    if(response.status == 200){
-                    var result = await response.json();
-                         // alert("Berhasil ditambahkan");
-                      var cartCountEl = document.getElementById("cartCount");
-                      cartCountEl.innerHTML = result ;
-                   window.location.href="#cartCount"
-                    }
-                }
-                catch(err){
-                    console.log(err);
-                }
-            }
+
+        async function add(bookId){
+          var usernameEl = document.getElementById("username");
+         if(usernameEl == null){
+             window.location.href="/Identity/Account/Login"
+         }
+             try{
+                 var response = await fetch(`/Cart/AddItem?bookId=${bookId}`);
+                 if(response.status == 200){
+                 var result = await response.json();
+                      // alert("Berhasil ditambahkan");
+                   var cartCountEl = document.getElementById("cartCount");
+                   cartCountEl.innerHTML = result ;
+                window.location.href="#cartCount"
+                 }
+             }
+             catch(err){
+                 console.log(err);
+             }
+         }
     </script>
 }

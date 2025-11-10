@@ -129,18 +129,79 @@ namespace ProjectEcomerceFinal.Repositories
 
         public async Task<int> GetCartItemCount(string userId = "")
         {
-            if (string.IsNullOrEmpty(userId)) 
+            if (string.IsNullOrEmpty(userId))
             {
                 userId = GetUserId();
             }
 
-            var data = await (from cart  in _dbContext.ShoppingCarts
+            var data = await (from cart in _dbContext.ShoppingCarts
                               join details in _dbContext.CartDetails
                               on cart.Id equals details.ShoppingCartId
                               where cart.UserId == userId
-                              select new {details.Id}
+                              select new { details.Id }
                               ).ToListAsync();
             return data.Count;
+        }
+
+        public async Task<bool> DoCheck()
+        {
+            using var transaction = _dbContext.Database.BeginTransaction();
+            try
+            {
+                var userId = GetUserId();
+                if (string.IsNullOrEmpty(userId))
+                {
+                    throw new Exception("user is not login");
+                }
+                var cart = await GetCart(userId);
+                if (cart is null)
+                {
+                    throw new Exception("invalid cart");
+                }
+
+                var cartDetail = _dbContext.CartDetails.Include(a => a.Book).Where(a => a.ShoppingCartId == cart.Id).ToList();
+                if (cartDetail.Count == 0)
+                {
+                    throw new Exception("Cart Is Empty");
+
+                }
+                var order = new Order
+                {
+                    UserId = userId,
+                    CreateDate = DateTime.Now,
+                    OrderStatusId = 1,
+
+                };
+                _dbContext.Orders.Add(order);
+                _dbContext.SaveChanges();
+
+                foreach (var item in cartDetail)
+                {
+                    var orderDetail = new OrderDetail
+                    {
+                        BookId = item.BookId,
+                        OrderId = order.Id,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.Book?.Price ?? 0
+
+                    };
+                    _dbContext.OrderDetails.Add(orderDetail);
+
+                }
+
+                _dbContext.CartDetails.RemoveRange(cartDetail);
+                await _dbContext.SaveChangesAsync();
+
+
+                transaction.Commit();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception("Gagal membuat order baru: " + ex.Message, ex);
+            }
         }
     }
 }

@@ -43,7 +43,7 @@ namespace ProjectEcomerceFinal.Repositories
             return await query.ToListAsync();
         }
 
-      
+
         public async Task<IEnumerable<Genre>> Genres()
         {
             IQueryable<Genre> query = from genre in _db.Genres

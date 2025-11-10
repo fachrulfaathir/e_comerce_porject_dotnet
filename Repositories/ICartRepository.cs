@@ -10,5 +10,7 @@
         Task<ShoppingCart> GetCart(string userId);
 
         Task<int> GetCartItemCount(string userId = "");
+
+        Task<bool> DoCheck();
     }
 }

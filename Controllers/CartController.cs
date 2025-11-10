@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ProjectEcomerceFinal.Controllers
 {
-    [Authorize]
+    [Authorize] 
     public class CartController : Controller
     {
         private readonly ICartRepository _cartRepository;
@@ -36,6 +36,15 @@ namespace ProjectEcomerceFinal.Controllers
         {
             int cartItem = await _cartRepository.GetCartItemCount();
             return Ok(cartItem);
+        }
+        public async Task<bool> ChekoutKeranjang()
+        {
+            bool isChekout = await _cartRepository.DoCheck();
+            //if (!isChekout)
+            //{
+            //    throw (new Exception("error"));
+            //}
+            return isChekout;
         }
     }
 }
