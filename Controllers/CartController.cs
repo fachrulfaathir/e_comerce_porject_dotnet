@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ProjectEcomerceFinal.Controllers
@@ -37,14 +38,39 @@ namespace ProjectEcomerceFinal.Controllers
             int cartItem = await _cartRepository.GetCartItemCount();
             return Ok(cartItem);
         }
-        public async Task<IActionResult> ChekoutKeranjang()
+        public IActionResult ChekoutKeranjang()
         {
-            bool isChekout = await _cartRepository.DoCheck();
-            if (!isChekout)
+            return View();
+        }
+        public IActionResult OrderSuccess()
+        {
+            return View();
+        }
+        public IActionResult OrderFailure()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChekoutKeranjang(CheckoutModel model)
+        {
+            if (!ModelState.IsValid)
             {
-                throw (new Exception("error"));
+                return View(model);
             }
-            return RedirectToAction("Index", "Home");
+            var paymentResult = await _cartRepository.DoCheck(model);
+            if (string.IsNullOrEmpty(paymentResult))
+            {
+                Console.WriteLine("Payment Result dari Midtrans:");
+                Console.WriteLine(paymentResult);
+            }
+
+            // Deserialize JSON agar bisa ambil token / URL Midtrans
+            var json = JsonSerializer.Deserialize<JsonElement>(paymentResult);
+            var redirectUrl = json.GetProperty("redirect_url").GetString();
+
+            // arahkan user ke halaman pembayaran Midtrans
+            return Redirect(redirectUrl);
         }
     }
+    
 }

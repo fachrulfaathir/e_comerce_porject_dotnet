@@ -11,6 +11,6 @@
 
         Task<int> GetCartItemCount(string userId = "");
 
-        Task<bool> DoCheck();
+        Task<string> DoCheck(CheckoutModel model);
     }
 }

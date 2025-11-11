@@ -8,12 +8,14 @@ namespace ProjectEcomerceFinal.Repositories
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly MidtransService _midtransService;
 
-        public CartRepository(ApplicationDbContext db, UserManager<IdentityUser> userManager, IHttpContextAccessor httpContextAccessor)
+        public CartRepository(ApplicationDbContext db, UserManager<IdentityUser> userManager, IHttpContextAccessor httpContextAccessor, MidtransService midtransService)
         {
             _dbContext = db;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
+            _midtransService = midtransService;
         }
 
         public async Task<int> AddItem(int bookId, int qty)
@@ -143,7 +145,7 @@ namespace ProjectEcomerceFinal.Repositories
             return data.Count;
         }
 
-        public async Task<bool> DoCheck()
+        public async Task<string> DoCheck(CheckoutModel model)
         {
             using var transaction = _dbContext.Database.BeginTransaction();
             try
@@ -165,16 +167,29 @@ namespace ProjectEcomerceFinal.Repositories
                     throw new Exception("Cart Is Empty");
 
                 }
+
+                var pendingRecord = _dbContext.orderStatuses.FirstOrDefault(s => s.StatusName == "Pending");
+                if (pendingRecord is null)
+                {
+                    throw new Exception("Pending is Null");
+                }
                 var order = new Order
                 {
                     UserId = userId,
+                    Name = model.Name,
+                    Email = model.Email,
+                    MobileNumber = model.MobileNumber,
+                    PaymentMethod = model.PaymentMethod,
+                    Address = model.PaymentMethod,
+                    isPaid = false,
                     CreateDate = DateTime.Now,
-                    OrderStatusId = 1,
+                    OrderStatusId = pendingRecord.Id,
 
                 };
                 _dbContext.Orders.Add(order);
                 _dbContext.SaveChanges();
 
+                var orderDetails = new List<OrderDetail>();
                 foreach (var item in cartDetail)
                 {
                     var orderDetail = new OrderDetail
@@ -186,15 +201,15 @@ namespace ProjectEcomerceFinal.Repositories
 
                     };
                     _dbContext.OrderDetails.Add(orderDetail);
-
+                    orderDetails.Add(orderDetail);
                 }
+
+                var paymentResult = await _midtransService.CreatePaymentAsync(order, orderDetails);
 
                 _dbContext.CartDetails.RemoveRange(cartDetail);
                 await _dbContext.SaveChangesAsync();
-
-
                 transaction.Commit();
-                return true;
+                return paymentResult; // bisa JSON atau URL Snap Token
 
             }
             catch (Exception ex)

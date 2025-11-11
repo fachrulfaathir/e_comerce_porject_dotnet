@@ -9,7 +9,7 @@ namespace ProjectEcomerceFinal.Repositories
         private readonly ApplicationDbContext _dbContext;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public UserOrderRepository(ApplicationDbContext applicationDbContext, IHttpContextAccessor httpContextAccessor , UserManager<IdentityUser> userManager)
+        public UserOrderRepository(ApplicationDbContext applicationDbContext, IHttpContextAccessor httpContextAccessor, UserManager<IdentityUser> userManager)
         {
             _dbContext = applicationDbContext;
             _userManager = userManager;

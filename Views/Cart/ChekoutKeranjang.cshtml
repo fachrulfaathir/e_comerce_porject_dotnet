@@ -1,0 +1,54 @@
+﻿@model CheckoutModel
+
+@{
+}
+
+<h2>Checkout</h2>
+<p>Isi data berikut terlebih dahulu</p>
+<br />
+<form asp-action="ChekoutKeranjang">
+    <div class="py-2">
+        <label for="name">Name*</label>
+        <input class="form-control" asp-for="Name"  />
+        <span asp-validation-for="Name" class="text-danger"></span>
+
+    </div>
+    <div class="py-2">
+        <label for="MobileNumber">Email*</label>
+        <input class="form-control" asp-for="Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="py-2">
+        <label for="MobileNumber">Mobile Number*</label>
+        <input class="form-control" asp-for="MobileNumber"  />
+        <span asp-validation-for="MobileNumber" class="text-danger"></span>
+
+    </div>
+    <div class="py-2">
+        <label for="Address">Address*</label>
+        <textarea class="form-control" asp-for="Address"></textarea>
+        <span asp-validation-for="Address" class="text-danger"></span>
+
+    </div>
+    <div class="py-2">
+        <label for="PaymentMethod">PaymentMethod*</label><br/>
+        <select class="form-control" asp-for="PaymentMethod" >
+            <option value="">
+                Select Payment Method
+            </option>
+            @foreach(var method in Enum.GetValues(typeof(ProjectEcomerceFinal.Constants.PaymentMethod)))
+            {
+                <option value="@method.ToString()">
+                   @method.ToString()
+                </option>
+            }
+        </select>
+        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+
+    </div>
+    <div class="py-2">
+        <button type="submit" class="btn btn-info">
+            Next
+        </button>
+    </div>
+</form>
