@@ -37,14 +37,14 @@ namespace ProjectEcomerceFinal.Controllers
             int cartItem = await _cartRepository.GetCartItemCount();
             return Ok(cartItem);
         }
-        public async Task<bool> ChekoutKeranjang()
+        public async Task<IActionResult> ChekoutKeranjang()
         {
             bool isChekout = await _cartRepository.DoCheck();
-            //if (!isChekout)
-            //{
-            //    throw (new Exception("error"));
-            //}
-            return isChekout;
+            if (!isChekout)
+            {
+                throw (new Exception("error"));
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }

@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "GetUserCart";
+}
+<div class="mt-2" style="width:90%;margin:auto">
+    <h3>My Orders</h3>
+
+    @if (Model != null && Model.Count() > 0)
+    {
+        <table class="table table-stripped">
+            <tr>
+                <th>Order Date</th>
+                <th>Order Status</th>
+            </tr>
+
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.CreateDate.ToString("dd-MM-yyyy")</td>
+                    <td>@order.OrderStatus.StatusName</td>
+                </tr>
+
+                @if (order.OrderDetails != null && order.OrderDetails.Count > 0)
+                {
+
+                    <tr>
+                        <td>
+                            <table class="table table-striped">
+                                <tr>
+                                    <td>
+                                        Total:
+                                    </td>
+                                    <td>
+                                        @(order.OrderDetails.Select(item => item.Book.Price * item.Quantity).Sum())
+                                    </td>
+                                </tr>
+                                @foreach (var item in order.OrderDetails)
+                                {
+                                    <tr>
+                                        <td>
+                                            @if (string.IsNullOrEmpty(item.Book.Image))
+                                            {
+                                                <img src="/images/NoImage.png" style="width: 80px; height:100px" />
+                                            }
+                                            else
+                                            {
+                                                <img src="/images/@item.Book.Image" style="width: 80px; height:100px" />
+
+                                            }
+                                        </td>
+                                        <td>
+                                            @item.Book.genre.GenreName
+                                        </td>
+                                        <td>
+                                            @item.Book.Price
+                                        </td>
+
+                                        <td>
+                                            @item.Quantity
+                                        </td>
+                                        <td>
+                                            @(item.Book.Price* item.Quantity)
+                                        </td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
+                }
+            }
+        </table>
+
+
+    }
+    else
+    {
+        <h5>Cart Is Empty</h5>
+    }
+</div>

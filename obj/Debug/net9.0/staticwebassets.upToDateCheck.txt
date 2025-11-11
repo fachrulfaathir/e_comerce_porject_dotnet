@@ -1,6 +1,6 @@
-wwwroot\favicon.ico
 wwwroot\css\bootstrap.min.css
-wwwroot\images\NoImage.png
+wwwroot\favicon.ico
 wwwroot\images\bond.jpg
+wwwroot\images\NoImage.png
 C:\Users\Yui\source\repos\ProjectEcomerceFinal\wwwroot\favicon.ico
 C:\Users\Yui\source\repos\ProjectEcomerceFinal\wwwroot\css\bootstrap.min.css
