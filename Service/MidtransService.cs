@@ -47,7 +47,7 @@ public class MidtransService
 
         var baseUrl = "https://app.sandbox.midtrans.com/snap/v1/transactions";
 
-        var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes("SB-Mid-server-graBzJ4LkBuCH14lCy8DD5mW" + ":"));
+        var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes(_serverKey+ ":"));
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
 
         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
